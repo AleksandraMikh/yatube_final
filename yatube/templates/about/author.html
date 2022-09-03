@@ -1,0 +1,25 @@
+<!-- templates/about/author.html -->
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+<div class="container">
+        <div class = 'row'>
+            <h1>Привет, я Саша</h1>
+            <div class = 'py-3'>
+                <p>
+                    Я студентка Яндекс.Практикума и просто Весьма Сообразительная Дама <br>
+                    <small> Хотя я пока что новичок в программировании <br>
+                    <br>
+                    <p class="lead">
+                        <p><i>Не ошибается тот, кто ничего не делает</i></p>
+                    </p>
+                </p>
+            </div>
+            <p>
+                А я много делаю, поэтому много ошибаюсь.
+            </p>
+            <img src="{%static 'img/mistakes.jpeg' %} " style="width:300px; ">
+        </div>
+</div>
+{% endblock %}
