@@ -46,14 +46,11 @@ def profile(request, username):
                'is_profile': True,
                }
 
-    if request.user.is_authenticated:
-        user = User.objects.get(username=request.user)
-        following = Follow.objects.filter(
-            user=user).filter(
-            author=author
-        ).exists()
-        context['following'] = following
-
+    following = request.user.is_authenticated and Follow.objects.filter(
+        user=request.user,
+        author=author
+    ).exists()
+    context['following'] = following
     return render(request, template, context)
 
 
@@ -130,12 +127,7 @@ def post_edit(request, post_id):
 
 @login_required
 def follow_index(request):
-    user = User.objects.get(username=request.user)
-    follows = user.follower.distinct().select_related('author')
-    post_list = []
-    for follow in follows:
-        post_list.extend([*follow.author.posts_of_author.all()])
-
+    post_list = Post.objects.filter(author__following__user=request.user)
     page_obj = paginate_page(request, post_list)
     context = {'page_obj': page_obj, }
     return render(request, 'posts/follow.html', context)
@@ -143,11 +135,10 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    user = User.objects.get(username=request.user)
-    author = User.objects.get(username=username)
-    if author != user:
+    author = get_object_or_404(User, username=username)
+    if author != request.user:
         Follow.objects.get_or_create(
-            user=user,
+            user=request.user,
             author=author
         )
     return redirect('posts:profile', username=username)
@@ -155,9 +146,10 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    user = User.objects.get(username=request.user)
-    author = User.objects.get(username=username)
-    Follow.objects.filter(
-        user=user).filter(
-        author=author).delete()
+    author = get_object_or_404(User, username=username)
+    flw_inst = Follow.objects.filter(
+        user=request.user,
+        author=author)
+    if flw_inst.exists():
+        flw_inst.delete()
     return redirect('posts:profile', username=username)

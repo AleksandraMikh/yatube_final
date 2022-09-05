@@ -159,3 +159,5 @@ LOGIN_REDIRECT_URL = 'posts:index'
 # LOGOUT_REDIRECT_URL = 'posts:index'
 
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+
+POSTS_PER_PAGE = 10

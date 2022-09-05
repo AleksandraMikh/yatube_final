@@ -1,7 +1,7 @@
 # from asyncio.windows_events import NULL
 import shutil
 import tempfile
-import time
+
 
 from django.test import TestCase, Client, override_settings
 from django.contrib.auth import get_user_model
@@ -300,12 +300,6 @@ class Cache(TestCase):
         cache.clear()
 
     def test_index_cached(self):
-        start_count = Post.objects.count()
-
-        # get response when no posts created
-        guest_client = Client()
-        response = guest_client.get(reverse('posts:index'))
-        cashed_response_start = response.content
 
         # create post
         user = User.objects.create(username='TestUser')
@@ -313,25 +307,33 @@ class Cache(TestCase):
             text='Test text',
             author=user,)
 
-        # check that post was created in db
-        finish_count = Post.objects.count()
-        self.assertEqual(start_count + 1, finish_count)
+        # get response when post created
+        guest_client = Client()
+        response = guest_client.get(reverse('posts:index'))
+        cashed_response_start = response.content
 
-        # check that new post didn't appear in response
+        # check that post was created in db
+        count = Post.objects.count()
+        self.assertEqual(1, count)
+
+        # delete post
+        post.delete()
+
+        # check that new post is still in response
         response = guest_client.get(reverse('posts:index'))
         self.assertEqual(cashed_response_start,
                          response.content)
 
-        # wait for cash flush and get new response
+        # clear cash and get new response
         # check that new response differs from cashed initially
-        time.sleep(21)
+        cache.clear()
         response = guest_client.get(reverse('posts:index'))
         self.assertNotEqual(cashed_response_start,
                             response.content)
 
-        # check that new post is in the context
+        # check that new post is not in the context
         posts = response.context['page_obj']
-        self.assertIn(post, posts)
+        self.assertNotIn(post, posts)
 
 
 class FollowTests(TestCase):
@@ -347,24 +349,22 @@ class FollowTests(TestCase):
         self.authorised_client.force_login(user=self.user)
 
     def test_authorized_can_follow(self):
-        initial_count = Follow.objects.filter(user=self.user).count()
         self.authorised_client.get(reverse(
             'posts:profile_follow',
             kwargs={'username': self.authorname}))
-        final_count = Follow.objects.filter(user=self.user).count()
-        self.assertEqual(initial_count + 1, final_count)
+        count = Follow.objects.filter(user=self.user).count()
+        self.assertEqual(1, count)
         self.assertTrue(Follow.objects.filter(user=self.user,
                                               author=self.author).exists())
 
     def test_authorized_can_unfollow(self):
         Follow.objects.create(user=self.user,
                               author=self.author)
-        initial_count = Follow.objects.filter(user=self.user).count()
         self.authorised_client.get(reverse(
             'posts:profile_unfollow',
             kwargs={'username': self.authorname}))
-        final_count = Follow.objects.filter(user=self.user).count()
-        self.assertEqual(initial_count - 1, final_count)
+        count = Follow.objects.filter(user=self.user).count()
+        self.assertEqual(0, count)
         self.assertFalse(Follow.objects.filter(user=self.user,
                                                author=self.author).exists())
 
