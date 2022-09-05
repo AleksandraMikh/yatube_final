@@ -11,7 +11,6 @@ from django.core.cache import cache
 from ..models import Group, Post, Follow
 from ..forms import PostForm, CommentForm
 from django.urls import reverse
-from ..settings import POSTS_PER_PAGE
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 User = get_user_model()
@@ -198,8 +197,8 @@ class PaginatorTest(TestCase):
     # check two pages of paginator
     def test_paginator(self):
         initial_length = Post.objects.count()
-        extra_posts = POSTS_PER_PAGE + 3
-        second_page = (initial_length + extra_posts) // POSTS_PER_PAGE
+        extra_posts = settings.POSTS_PER_PAGE + 3
+        second_page = (initial_length + extra_posts) // settings.POSTS_PER_PAGE
 
         posts = [
             Post(
@@ -207,7 +206,7 @@ class PaginatorTest(TestCase):
                 author=PaginatorTest.user,
                 group=PaginatorTest.group
             )
-            for i in range(1, POSTS_PER_PAGE + second_page + 1)
+            for i in range(1, settings.POSTS_PER_PAGE + second_page + 1)
         ]
 
         Post.objects.bulk_create(posts)
@@ -223,7 +222,7 @@ class PaginatorTest(TestCase):
         }
 
         pages = {
-            1: POSTS_PER_PAGE,
+            1: settings.POSTS_PER_PAGE,
             2: second_page
         }
 
