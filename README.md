@@ -49,4 +49,25 @@ python manage.py runserver
 
 6. Visit `http://localhost:8000` in your web browser to see the app in action.
 
+## 🌟 Application functionality
+
+### Create superuser
+
+Create superuser to get access to adminpanel and manage users and posts. To create superuser execute a command:
+
+        python manage.py createsuperuser
+
+and follow instructions on the monitor 🖥.
+
+### Adminpanel
+
+Adminpanel can be accessed on the endpoint http://localhost:8000/admin/. 
+If you forgot login or password simply create new superuser.
+
+On this page admin can create, update or delete users, posts and goups for posts. Posts can be created or deleted via regular user also. Groups can be managed only via adminpanel.
+
+### Creating and editing posts and comments
+
+To create new posts and comments, the user must register in the system and then log in to the website. After that, they can create new posts, add photos, and edit their own posts and comments.
+
 That's it! If you have any questions, please feel free to contact me https://t.me/mikhaidoku.
