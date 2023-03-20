@@ -27,10 +27,6 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Git Clone Action
       uses: actions/checkout@v2
-      with:
-        repository: ${{ secrets.repository }}
-        ssh-key: ${{ secrets.ACCESS_TOKEN }}
-        path: yatube/
     - name: Lint with flake8 author
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -44,10 +40,10 @@ jobs:
         # exit-zero treats all errors as warnings
         flake8 tests --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
     - name: Test with pytest
-      env:
-        SECRET_KEY: ${{ secrets.PYTEST_NEW }}$
-        DJANGO_SETTINGS_MODULE: yatube.settings
-        DEBUG: 1
-        ALLOWED_HOSTS: "*"
+      # env:
+      #   SECRET_KEY: ${{ secrets.PYTEST_NEW }}$
+      #   DJANGO_SETTINGS_MODULE: yatube.settings
+      #   DEBUG: 1
+      #   ALLOWED_HOSTS: "*"
       run: |
-        py.test
+        pytest
