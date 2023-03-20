@@ -1,5 +1,6 @@
 # 🐍 Yatube: Emulating a Social Network 📱🌐
 
+https://github.com/AleksandraMikh/yatube_final/actions/workflows/python-app.yml/badge.svg
 Yatube is a web application that helps you connect and share content with your friends and family. It emulates a social network and has a variety of features that will help you stay connected with people you care about.
 
 Some of the features included in Yatube are:
