@@ -31,9 +31,22 @@ cd yatube_final
 pip install -r requirements.txt
 ```
 
-3. Create the database and run database migrations:
+If you got problems with Pillow set the version 8.3.1 in requirements.txt
 
 ```
+Pillow == 8.3.1
+```
+
+And then run again 
+
+```
+pip install -r requirements.txt
+```
+
+3. Move to project directory, create the database and run database migrations:
+
+```
+cd yatube
 python manage.py migrate
 ```
 
