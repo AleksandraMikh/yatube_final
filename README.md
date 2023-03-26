@@ -43,7 +43,7 @@ And then run again
 pip install -r requirements.txt
 ```
 
-3. Move to project directory, create the database and run database migrations:
+3. Navigate to project directory, create the database and run database migrations:
 
 ```
 cd yatube
