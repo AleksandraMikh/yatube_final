@@ -25,9 +25,11 @@ git clone https://github.com/AleksandraMikh/yatube_final.git
 cd yatube_final
 ```
 
-2. Install the required packages using pip:
+2. Create and start virtial environment and install the required packages using pip:
 
 ```
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
